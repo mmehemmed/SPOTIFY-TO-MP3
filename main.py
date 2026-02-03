@@ -13,14 +13,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 def get_spotify_playlist(playlist_id):
     results = sp.playlist_items(playlist_id)
     tracks = results['items']
-    # Create a list of tuples with (song_name, artist_name)
     song_names = [(track['track']['name'], track['track']['artists'][0]['name']) for track in tracks]
     return song_names
 
 # Search for YouTube videos
 def search_youtube(song):
     song_name = f"{song[0]} {song[1]}"
-    videos_search = VideosSearch(song_name, limit=1)  # Limit to one result
+    videos_search = VideosSearch(song_name, limit=1)  
     results = videos_search.result()
     if results['result']:
         return song_name, results['result'][0]['link']
@@ -29,8 +28,8 @@ def search_youtube(song):
 # Download audio from YouTube as MP3
 def download_audio(song_info):
     song_name, youtube_url = song_info
-    if youtube_url:  # Only download if a valid URL was found
-        output_path = os.path.join('downloads', f"{song_name.replace('/', '')}.mp3")  # Sanitize file name
+    if youtube_url: 
+        output_path = os.path.join('downloads', f"{song_name.replace('/', '')}.mp3")  
         ydl_opts = {
             'format': 'bestaudio/best',
             'postprocessors': [{
@@ -52,13 +51,10 @@ if not os.path.exists('downloads'):
 # Example usage
 playlist_id = input("ENTER YOUR PLAYLIST LINK:   \n")[34:]
 playlist_id = playlist_id.split("?")[0]
-#https://open.spotify.com/playlist/1FvSYPuf5HdZivn0JzQsZM?si=776cb58e5c9b4347
-#'1FvSYPuf5HdZivn0JzQsZM'  # Replace with your actual playlist ID
 songs = get_spotify_playlist(playlist_id)
 
 # Use ThreadPoolExecutor for concurrent execution
 with ThreadPoolExecutor(max_workers=10) as executor:
-    # First, perform YouTube searches concurrently
     futures = {executor.submit(search_youtube, song): song for song in songs}
     youtube_links = []
 
