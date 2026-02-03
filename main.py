@@ -8,13 +8,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 
-# Authenticate with Spotify
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-    client_id="73351f31a07a49d391c4af7569c8e352",  # Replace with your client ID
-    client_secret="9175228355804ccfb70498509dc32240",  # Replace with your client secret
-    redirect_uri="http://localhost:8888/callback",
-    scope="playlist-read-private"
-))
 
 # Get playlist details
 def get_spotify_playlist(playlist_id):
@@ -81,12 +74,3 @@ with ThreadPoolExecutor(max_workers=10) as executor:
 
 print("ALL SONGS ARE DOWNLOADED :))")
 
-
-"""
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-    client_id="73351f31a07a49d391c4af7569c8e352",
-    client_secret="9175228355804ccfb70498509dc32240",
-    redirect_uri="http://localhost:8888/callback",
-    scope="playlist-read-private"))
-
-"""
